@@ -33,6 +33,7 @@ public class BrowserTypes {
 			}else if(browserType.equalsIgnoreCase("IE"))
 			{
 				return new IEWebDriver().getDriver();
+				
 			}
 		}
 		return new ChromeWebDriver().getDriver();

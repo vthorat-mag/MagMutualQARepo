@@ -8,24 +8,25 @@ import org.openqa.selenium.WebElement;
 public interface CommonActionInterface {
 	
 	void navigateTo(String url);
-	void enterTextIn(WebElement pageElement, String text);
+	void enterTextIn(WebDriver driver, WebElement pageElement, String text, String TextFieldName);
     void clickButton(WebDriver driver, WebElement pageElement, String buttonName);
-    void waitFor(long ms);
+    void waitFor(WebDriver driver, long time);
     void close(WebDriver driver);
     void takeScreenShot(String pageTitle);
-    String getPageTitle();
-    String getText(WebElement pageElement);
-    void clearTextBox(WebElement pageElement, String textfield);
+    String getPageTitleWithPolicyNumber(WebDriver driver, String pageTitle) throws InterruptedException;
+    String getPageTitle(WebDriver driver, String expectedPageTitle) throws InterruptedException;
+    String getText(WebDriver driver, WebElement pageElement);
+    void clearTextBox(WebDriver driver, WebElement pageElement, String textfield);
     String getAttributeValue(WebElement pageElement, String attributeName);
-    void click(WebElement pageElement, String elementName);
-//  void clear(WebElement pageElement);
+    void click(WebDriver driver, WebElement pageElement, String elementName);
     void switchToFrameUsingId(WebDriver driver, String uniqId);
-    void switchToFrameUsingElement(WebDriver driver, WebElement element);
+    void switchToFrameUsingElement(WebDriver driver, WebElement element) throws Exception;
     void switchToParentWindowfromframe(WebDriver driver);
-    void visibilityOfElement(WebElement pageElement, String text);
-    String switchToWindow(WebDriver driver);
-    void selectDropdownByValue(WebElement Value,String DropDownOption, String name);
+    void visibilityOfElement(WebDriver driver, WebElement pageElement, String text);
+    String switchToWindow(WebDriver driver) throws InterruptedException;
+    void selectDropdownByValue(WebDriver driver, WebElement Value,String DropDownOption, String name);
     void switchToParentWindowfromotherwindow(WebDriver driver, String parentwindow);
-    void policySearch(String policyNo, WebElement policySearchTxtBox, WebElement earchBtn);
+    void policySearch(WebDriver driver, String policyNo, WebElement policySearchTxtBox, WebElement earchBtn);
+    void invisibilityOfLoader(WebDriver driver);
 }
 
