@@ -11,7 +11,7 @@ public static Properties prop;
 
 public properties()
 {
-	try {
+	/*try {
 		
 		prop = new Properties();
 		FileInputStream ip;
@@ -22,6 +22,6 @@ public properties()
 		e.printStackTrace();
 	} catch (IOException e) {
 		e.printStackTrace();
-	}
+	}*/
   }
 }

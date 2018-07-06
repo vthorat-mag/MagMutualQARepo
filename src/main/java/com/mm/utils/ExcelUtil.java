@@ -1,6 +1,9 @@
 package com.mm.utils;
 
 import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -8,79 +11,43 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-public class ExcelUtil
-{
-    public FileInputStream fis = null;
-    public XSSFWorkbook workbook = null;
-    public XSSFSheet sheet = null;
-    public XSSFRow row = null;
-    public XSSFCell cell = null;
- 
-    
-    //Method is used to set the Excel File Path
-    public ExcelUtil() throws Exception
-    {
-        fis = new FileInputStream(System.getProperty("user.dir")+"\\src\\main\\resources\\Form_Data.xlsx");
-        workbook = new XSSFWorkbook(fis);
-        fis.close();
-    }
-            
- 
-    /**
-     * This method is used to get the sheetName,rowNumber and ColumnName of Excel-Sheet.
-     * @param sheetName
-     * @param colName
-     * @param rowNum
-     * @return 
-     */
-    
-    public String getCellData(String sheetName, String colName, int rowNum)
-    {
-        try
-        {
-            int col_Num = -1;
-            sheet = workbook.getSheet(sheetName);
-            row = sheet.getRow(0);
-            for(int i = 0; i < row.getLastCellNum(); i++)
-            {
-                if(row.getCell(i).getStringCellValue().trim().equals(colName.trim()))
-                    col_Num = i;
-            }
- 
-            row = sheet.getRow(rowNum - 1);
-            cell = row.getCell(col_Num);
- 
-            if(cell.getCellTypeEnum() == CellType.STRING)
-                return cell.getStringCellValue();
-            else if(cell.getCellTypeEnum() == CellType.NUMERIC)
-            {
-            	cell.setCellType(CellType.STRING);
-            	return cell.getStringCellValue();
-               
-            }else if(cell.getCellTypeEnum() == CellType.BLANK)
-                return "";
-            else
-                return String.valueOf(cell.getBooleanCellValue());
-        }
-        
-        
-        
-        catch(Exception e)
-        {
-            e.printStackTrace();
-            return "row "+rowNum+" or column "+colName +" does not exist  in Excel";
-        }
-    }
-    
-    //This method is used to take the row count
-    public int getRowCount(int sheetIndex)
-	{
-		
-		int row = workbook.getSheetAt(sheetIndex).getLastRowNum();	
-		
-		return row;
-		
-		
-	}
+public class ExcelUtil {
+	String xlFilePath = System.getProperty("user.dir")+"\\src\\main\\resources\\Form_Data.xlsx";
+	
+	ExcelApiTest eat = null;
+	List<String> listRowData =null;
 
+	//Logic to get the excel sheet data into object.
+	public HashMap<String, List<String>> testData(String sheetName) throws Exception {
+		
+		HashMap<String, List<String>> excelData = new HashMap<String, List<String>>();
+		//Read excel sheet and get rows and column count
+		eat = new ExcelApiTest(xlFilePath);
+		int rows = eat.getRowCount(sheetName);
+		int columns = eat.getColumnCount(sheetName);
+
+		//Browse through all columns
+		for (int j = 0; j < columns; j++) {
+			//Read the ColumnName
+			String sColumnName = eat.getCellData(sheetName, j, 0).toLowerCase();
+			listRowData = new ArrayList<String>();
+			
+			//Read All rows
+			for (int i = 1; i < rows; i++) {
+				listRowData.add(eat.getCellData(sheetName, j, i));
+				//ToDo- Check if the field is blank, don't add in list
+			}			
+			//Populate the HashMap
+			
+			excelData.put(sColumnName, listRowData);			
+		}
+		
+		return excelData;
+	}
 }
+
+/*for (int i = 1; i < rows; i++) {
+for (int j = 0; j < columns; j++) {
+	excelData[i - 1][j] = eat.getCellData(sheetName, j, i);
+}
+}*/
